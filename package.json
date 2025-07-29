@@ -1,0 +1,21 @@
+{
+  "name": "workshops-de-mcp",
+  "version": "1.1.0",
+  "description": "MCP Server für Workshops.DE API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "mcp",
+    "workshops.de",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9"
+  }
+} 
