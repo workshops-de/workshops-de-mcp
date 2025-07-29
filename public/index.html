@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshops.DE MCP Server</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .endpoint {
+            background: #e8f5e9;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        #result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Workshops.DE MCP Server auf Vercel</h1>
+    
+    <p>Dies ist ein Model Context Protocol (MCP) Server für die Workshops.DE API, gehostet auf Vercel.</p>
+    
+    <h2>API Endpoints</h2>
+    
+    <div class="endpoint">
+        GET /api/mcp - Zeigt verfügbare Tools
+    </div>
+    
+    <div class="endpoint">
+        POST /api/mcp - Führt ein Tool aus
+    </div>
+    
+    <div class="endpoint">
+        GET /api/mcp-sse - SSE Stream für MCP Kommunikation
+    </div>
+    
+    <h2>Verfügbare Tools</h2>
+    <ul>
+        <li><strong>list_courses</strong> - Zeigt alle verfügbaren Kurse</li>
+        <li><strong>get_course_events</strong> - Zeigt Events für einen bestimmten Kurs</li>
+        <li><strong>list_trainers</strong> - Zeigt alle Trainer</li>
+        <li><strong>get_course_trainers</strong> - Zeigt Trainer für einen bestimmten Kurs</li>
+        <li><strong>list_events</strong> - Zeigt alle kommenden Schulungen</li>
+        <li><strong>get_event</strong> - Zeigt Details zu einem bestimmten Event</li>
+    </ul>
+    
+    <h2>API Testen</h2>
+    <button onclick="testAPI()">Kurse abrufen</button>
+    <button onclick="testSSE()">SSE Stream testen</button>
+    <div id="result"></div>
+    
+    <h2>MCP Client Konfiguration</h2>
+    <pre>{
+  "mcpServers": {
+    "workshops-de": {
+      "url": "https://workshops-mcp.vercel.app/api/mcp"
+    }
+  }
+}</pre>
+    
+    <h2>Beispiel: Tool ausführen</h2>
+    <pre>// Kurse abrufen
+fetch('/api/mcp', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ 
+    tool: 'list_courses' 
+  })
+})
+.then(res => res.json())
+.then(data => console.log(data));</pre>
+
+    <script>
+        function showResult(data) {
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            result.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        }
+        
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/mcp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tool: 'list_courses' })
+                });
+                const data = await response.json();
+                showResult(data);
+            } catch (error) {
+                showResult('Fehler: ' + error.message);
+            }
+        }
+        
+        function testSSE() {
+            const eventSource = new EventSource('/api/mcp-sse');
+            showResult('SSE Verbindung geöffnet...\n');
+            
+            eventSource.onmessage = (event) => {
+                const result = document.getElementById('result');
+                result.textContent += event.data + '\n';
+            };
+            
+            eventSource.onerror = (error) => {
+                const result = document.getElementById('result');
+                result.textContent += 'SSE Fehler\n';
+                eventSource.close();
+            };
+            
+            setTimeout(() => eventSource.close(), 10000);
+        }
+    </script>
+</body>
+</html> 

@@ -70,4 +70,8 @@ typings/
 .idea/
 .vscode/
 *.swp
-*.swo 
+*.swo
+
+# Vercel
+.vercel/
+.env*.local 
