@@ -74,4 +74,9 @@ typings/
 
 # Vercel
 .vercel/
-.env*.local 
+.env*.local
+
+# Next.js
+.next/
+out/
+build/ 

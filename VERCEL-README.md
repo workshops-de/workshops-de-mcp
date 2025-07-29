@@ -9,9 +9,14 @@ Dieses Projekt nutzt Vercels native MCP-Unterstützung mit dem `mcp-handler` Pac
 ## 📁 Projektstruktur
 
 ```
-├── api/
-│   └── mcp.js             # MCP Server mit mcp-handler
+├── app/
+│   ├── api/
+│   │   └── mcp/
+│   │       └── route.js   # MCP Server mit mcp-handler
+│   ├── layout.js          # Root Layout
+│   └── page.js            # Landing Page
 ├── package.json           # Dependencies
+├── next.config.js         # Next.js Konfiguration
 └── vercel.json            # Vercel Konfiguration
 ```
 

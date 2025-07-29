@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { createMcpHandler } from 'mcp-handler';
 import axios from 'axios';
 
+export const maxDuration = 60; // Maximum allowed duration for Vercel Hobby: 60 seconds
+
 const BASE_URL = 'https://workshops.de/api';
 
 const handler = createMcpHandler(
@@ -116,4 +118,4 @@ const handler = createMcpHandler(
   { basePath: '/api' },
 );
 
-export default handler; 
+export { handler as GET, handler as POST }; 

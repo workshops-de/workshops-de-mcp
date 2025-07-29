@@ -9,7 +9,9 @@
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "vercel dev",
+    "dev": "next dev",
+    "build": "next build",
+    "start:next": "next start",
     "deploy": "vercel"
   },
   "keywords": [
@@ -35,6 +37,9 @@
     "@modelcontextprotocol/sdk": "^1.0.4",
     "axios": "^1.7.9",
     "mcp-handler": "^1.0.1",
+    "next": "^15.4.5",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "zod": "^3.25.76"
   },
   "publishConfig": {
