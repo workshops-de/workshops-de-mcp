@@ -1,6 +1,6 @@
 # Workshops.DE MCP Server für Vercel
 
-Dieses Projekt ist optimiert für die Deployment auf Vercel als serverlose API mit SSE (Server-Sent Events) Support.
+Dieses Projekt nutzt Vercels native MCP-Unterstützung mit dem `mcp-handler` Package für optimale Performance und einfache Integration.
 
 ## 🚀 Quick Deploy
 
@@ -9,14 +9,14 @@ Dieses Projekt ist optimiert für die Deployment auf Vercel als serverlose API m
 ## 📁 Projektstruktur
 
 ```
-├── api/
-│   ├── mcp.js         # REST API Endpoint für MCP Tools
-│   └── mcp-sse.js     # SSE Endpoint für Streaming
+├── app/
+│   └── api/
+│       └── mcp/
+│           └── route.js   # MCP Server mit mcp-handler
 ├── public/
-│   └── index.html     # Landing Page mit API Dokumentation
-├── index.js           # Original MCP Server (für SSE)
-├── package.json       # Dependencies
-└── vercel.json        # Vercel Konfiguration
+│   └── index.html         # Landing Page mit Dokumentation
+├── package.json           # Dependencies
+└── vercel.json            # Vercel Konfiguration
 ```
 
 ## 🔧 Lokale Entwicklung
@@ -32,37 +32,29 @@ vercel dev
 
 Die App läuft dann auf http://localhost:3000
 
-## 🌐 API Endpoints
+## 🌐 MCP Endpoint
 
-### REST API
+Der Server nutzt Vercels natives MCP Handler Format:
 
-**GET /api/mcp**
+**Endpoint:** `https://your-app.vercel.app/api/mcp`
+
+### Testen mit MCP Inspector
+
 ```bash
-curl https://your-app.vercel.app/api/mcp
+npx @modelcontextprotocol/inspector@latest https://your-app.vercel.app
 ```
 
-**POST /api/mcp**
-```bash
-curl -X POST https://your-app.vercel.app/api/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"tool": "list_courses"}'
-```
-
-### SSE Stream
-
-**GET /api/mcp-sse**
-```javascript
-const eventSource = new EventSource('https://your-app.vercel.app/api/mcp-sse');
-eventSource.onmessage = (event) => {
-  console.log(event.data);
-};
-```
+Dann:
+1. Öffne http://127.0.0.1:6274
+2. Wähle "Streamable HTTP" als Transport
+3. Gib die URL ein: `https://your-app.vercel.app/api/mcp`
+4. Klicke auf "Connect"
 
 ## 🔌 MCP Client Integration
 
-### Für Claude Desktop
+### Für Cursor
 
-`.claude/mcp.json`:
+`.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
@@ -73,9 +65,18 @@ eventSource.onmessage = (event) => {
 }
 ```
 
-### Für andere MCP Clients
+### Für Claude Desktop
 
-Die API unterstützt Standard HTTP/REST Calls mit JSON Payloads.
+```json
+{
+  "mcpServers": {
+    "workshops-de": {
+      "url": "https://your-app.vercel.app/api/mcp",
+      "transport": "http"
+    }
+  }
+}
+```
 
 ## 📋 Verfügbare Tools
 
@@ -142,17 +143,22 @@ Vercel bietet eingebautes Monitoring:
 
 ## 🆘 Troubleshooting
 
-**SSE funktioniert nicht?**
-- Vercel Functions haben ein 30-Sekunden Timeout
-- Für längere Streams nutze Vercel Edge Functions
+**Timeouts?**
+- Vercel Functions haben ein 60s Timeout (konfiguriert in vercel.json)
+- Alle API Calls sollten innerhalb dieser Zeit abgeschlossen sein
 
-**CORS Fehler?**
-- Prüfe die Headers in vercel.json
-- Browser-Console für Details checken
+**Verbindung schlägt fehl?**
+- Stelle sicher, dass die URL korrekt ist: `/api/mcp`
+- Nutze den MCP Inspector zum Testen
+- Prüfe die Vercel Function Logs im Dashboard
 
 **API Fehler?**
 - Vercel Dashboard → Functions → Logs
 - Prüfe ob workshops.de API erreichbar ist
+
+**Tool funktioniert nicht?**
+- Überprüfe die Parameter (z.B. courseId für get_course_events)
+- Schaue in die Vercel Function Logs für Details
 
 ## 📄 Lizenz
 

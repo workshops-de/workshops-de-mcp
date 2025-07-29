@@ -55,21 +55,15 @@
 <body>
     <h1>Workshops.DE MCP Server auf Vercel</h1>
     
-    <p>Dies ist ein Model Context Protocol (MCP) Server für die Workshops.DE API, gehostet auf Vercel.</p>
+    <p>Dies ist ein Model Context Protocol (MCP) Server für die Workshops.DE API, gehostet auf Vercel mit nativer MCP-Unterstützung.</p>
     
-    <h2>API Endpoints</h2>
-    
-    <div class="endpoint">
-        GET /api/mcp - Zeigt verfügbare Tools
-    </div>
+    <h2>MCP Endpoint</h2>
     
     <div class="endpoint">
-        POST /api/mcp - Führt ein Tool aus
+        https://workshops-mcp.vercel.app/api/mcp
     </div>
     
-    <div class="endpoint">
-        GET /api/mcp-sse - SSE Stream für MCP Kommunikation
-    </div>
+    <p>Dieser Endpoint unterstützt das Vercel Streamable HTTP Transport Format für MCP.</p>
     
     <h2>Verfügbare Tools</h2>
     <ul>
@@ -81,69 +75,50 @@
         <li><strong>get_event</strong> - Zeigt Details zu einem bestimmten Event</li>
     </ul>
     
-    <h2>API Testen</h2>
-    <button onclick="testAPI()">Kurse abrufen</button>
-    <button onclick="testSSE()">SSE Stream testen</button>
-    <div id="result"></div>
+    <h2>MCP Testen</h2>
+    <button onclick="testMCP()">MCP Inspector öffnen</button>
+    <div id="result">Nutze den MCP Inspector, um den Server zu testen: <code>npx @modelcontextprotocol/inspector@latest https://workshops-mcp.vercel.app</code></div>
     
     <h2>MCP Client Konfiguration</h2>
-    <pre>{
+    <pre>// Für Cursor (.cursor/mcp.json)
+{
   "mcpServers": {
     "workshops-de": {
       "url": "https://workshops-mcp.vercel.app/api/mcp"
     }
   }
+}
+
+// Für Claude Desktop
+{
+  "mcpServers": {
+    "workshops-de": {
+      "url": "https://workshops-mcp.vercel.app/api/mcp",
+      "transport": "http"
+    }
+  }
 }</pre>
     
-    <h2>Beispiel: Tool ausführen</h2>
-    <pre>// Kurse abrufen
-fetch('/api/mcp', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ 
-    tool: 'list_courses' 
-  })
-})
-.then(res => res.json())
-.then(data => console.log(data));</pre>
+    <h2>Verwendung</h2>
+    <pre>// 1. MCP Inspector verwenden (empfohlen für Tests)
+npx @modelcontextprotocol/inspector@latest https://workshops-mcp.vercel.app
+
+// 2. In Cursor verwenden
+// Füge zu .cursor/mcp.json hinzu:
+{
+  "mcpServers": {
+    "workshops-de": {
+      "url": "https://workshops-mcp.vercel.app/api/mcp"
+    }
+  }
+}
+
+// 3. In Claude Desktop verwenden
+// Füge zur Konfiguration hinzu und nutze die Tools im Chat</pre>
 
     <script>
-        function showResult(data) {
-            const result = document.getElementById('result');
-            result.style.display = 'block';
-            result.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
-        }
-        
-        async function testAPI() {
-            try {
-                const response = await fetch('/api/mcp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tool: 'list_courses' })
-                });
-                const data = await response.json();
-                showResult(data);
-            } catch (error) {
-                showResult('Fehler: ' + error.message);
-            }
-        }
-        
-        function testSSE() {
-            const eventSource = new EventSource('/api/mcp-sse');
-            showResult('SSE Verbindung geöffnet...\n');
-            
-            eventSource.onmessage = (event) => {
-                const result = document.getElementById('result');
-                result.textContent += event.data + '\n';
-            };
-            
-            eventSource.onerror = (error) => {
-                const result = document.getElementById('result');
-                result.textContent += 'SSE Fehler\n';
-                eventSource.close();
-            };
-            
-            setTimeout(() => eventSource.close(), 10000);
+        function testMCP() {
+            alert('Öffne ein Terminal und führe aus:\n\nnpx @modelcontextprotocol/inspector@latest https://workshops-mcp.vercel.app\n\nDann navigiere zu http://127.0.0.1:6274 und verbinde dich mit:\n- Transport: Streamable HTTP\n- URL: https://workshops-mcp.vercel.app/api/mcp');
         }
     </script>
 </body>

@@ -18,18 +18,23 @@ Der MCP Server stellt folgende Tools zur Verfügung:
 
 ## Installation
 
-### Option 1: Global via npm installieren
-```bash
-npm install -g @workshops.de/mcp
-```
+### Option 1: Vercel Deployment (empfohlen für Web-Zugriff)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/workshops-de/mcp-server)
 
-### Option 2: Direkt mit npx verwenden (empfohlen)
+Nutze Vercels native MCP-Unterstützung für optimale Performance. Siehe [VERCEL-README.md](./VERCEL-README.md) für Details.
+
+### Option 2: Direkt mit npx verwenden (für lokale Nutzung)
 ```bash
 # Keine Installation nötig, direkt ausführen:
 npx -y @workshops.de/mcp
 ```
 
-### Option 3: Aus dem Quellcode
+### Option 3: Global via npm installieren
+```bash
+npm install -g @workshops.de/mcp
+```
+
+### Option 4: Aus dem Quellcode
 ```bash
 git clone https://github.com/workshops-de/mcp-server
 cd mcp-server
@@ -38,7 +43,34 @@ npm install
 
 ## Verwendung
 
-### Mit Claude Desktop
+### Mit Vercel Deployment
+
+Wenn du den Server auf Vercel deployed hast:
+
+**Für Cursor:**
+```json
+{
+  "mcpServers": {
+    "workshops-de": {
+      "url": "https://deine-app.vercel.app/api/mcp"
+    }
+  }
+}
+```
+
+**Für Claude Desktop:**
+```json
+{
+  "mcpServers": {
+    "workshops-de": {
+      "url": "https://deine-app.vercel.app/api/mcp",
+      "transport": "http"
+    }
+  }
+}
+```
+
+### Mit lokalem MCP Server (Claude Desktop)
 
 1. Öffne die Claude Desktop Konfigurationsdatei:
    - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`

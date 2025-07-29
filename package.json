@@ -8,7 +8,9 @@
     "workshops-de-mcp": "./index.js"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "vercel dev",
+    "deploy": "vercel"
   },
   "keywords": [
     "mcp",
@@ -31,9 +33,14 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
-    "axios": "^1.7.9"
+    "axios": "^1.7.9",
+    "mcp-handler": "^1.0.1",
+    "zod": "^3.25.76"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "vercel": "^44.6.4"
   }
-} 
+}
