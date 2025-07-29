@@ -116,4 +116,4 @@ const handler = createMcpHandler(
   { basePath: '/api' },
 );
 
-export { handler as GET, handler as POST, handler as DELETE }; 
+export default handler; 
