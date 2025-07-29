@@ -12,7 +12,7 @@ const BASE_URL = 'https://workshops.de/api';
 // Erstelle den MCP Server
 const server = new Server(
   {
-    name: 'workshops-de-mcp',
+    name: '@workshops.de/mcp',
     version: '1.1.0',
   },
   {

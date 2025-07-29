@@ -1,6 +1,9 @@
-# Workshops.DE MCP Server
+# @workshops.de/mcp
 
 Ein MCP (Model Context Protocol) Server für die Workshops.DE API, der es KI-Assistenten ermöglicht, auf Kursinformationen, Events und Trainer-Daten zuzugreifen.
+
+[![npm version](https://img.shields.io/npm/v/@workshops.de/mcp.svg)](https://www.npmjs.com/package/@workshops.de/mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Funktionen
 
@@ -15,14 +18,21 @@ Der MCP Server stellt folgende Tools zur Verfügung:
 
 ## Installation
 
-1. Repository klonen oder Dateien herunterladen:
+### Option 1: Global via npm installieren
 ```bash
-git clone <repository-url>
-cd workshops-de-mcp
+npm install -g @workshops.de/mcp
 ```
 
-2. Dependencies installieren:
+### Option 2: Direkt mit npx verwenden (empfohlen)
 ```bash
+# Keine Installation nötig, direkt ausführen:
+npx -y @workshops.de/mcp
+```
+
+### Option 3: Aus dem Quellcode
+```bash
+git clone https://github.com/workshops-de/mcp-server
+cd mcp-server
 npm install
 ```
 
@@ -35,6 +45,31 @@ npm install
    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
 2. Füge den MCP Server zur Konfiguration hinzu:
+
+**Option A: Mit npx (empfohlen)**
+```json
+{
+  "mcpServers": {
+    "workshops-de": {
+      "command": "npx",
+      "args": ["-y", "@workshops.de/mcp"]
+    }
+  }
+}
+```
+
+**Option B: Mit global installiertem Paket**
+```json
+{
+  "mcpServers": {
+    "workshops-de": {
+      "command": "workshops-de-mcp"
+    }
+  }
+}
+```
+
+**Option C: Mit lokalem Pfad**
 ```json
 {
   "mcpServers": {
@@ -53,6 +88,10 @@ npm install
 Du kannst den Server auch direkt testen:
 
 ```bash
+# Mit npx (keine Installation nötig)
+npx -y @workshops.de/mcp
+
+# Oder wenn lokal installiert
 npm start
 ```
 

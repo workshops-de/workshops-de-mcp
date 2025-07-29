@@ -1,21 +1,39 @@
 {
-  "name": "workshops-de-mcp",
+  "name": "@workshops.de/mcp",
   "version": "1.1.0",
-  "description": "MCP Server für Workshops.DE API",
+  "description": "MCP Server für Workshops.DE API - Zugriff auf Kurse, Trainer und Events",
   "main": "index.js",
   "type": "module",
+  "bin": {
+    "workshops-de-mcp": "./index.js"
+  },
   "scripts": {
     "start": "node index.js"
   },
   "keywords": [
     "mcp",
+    "model-context-protocol",
     "workshops.de",
-    "api"
+    "api",
+    "training",
+    "courses",
+    "claude"
   ],
-  "author": "",
+  "author": "Workshops.DE",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/workshops-de/mcp-server"
+  },
+  "homepage": "https://workshops.de",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
     "axios": "^1.7.9"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 } 

@@ -1,0 +1,27 @@
+# Development files
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Test files
+test/
+*.test.js
+test-*.js
+
+# Documentation images/assets (if any)
+docs/
+images/
+
+# Config files
+.editorconfig
+.eslintrc*
+.prettierrc*
+
+# Keep only essential files for npm package 
