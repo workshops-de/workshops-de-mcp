@@ -25,7 +25,7 @@ export default function Home() {
           padding: '0.5rem',
           borderRadius: '4px',
           fontFamily: 'Courier New, monospace'
-        }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
+                 }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
       </div>
       
       <h2 style={{ color: '#333' }}>📋 Verfügbare Tools</h2>
@@ -70,7 +70,7 @@ export default function Home() {
         overflow: 'auto',
         fontFamily: 'Courier New, monospace'
       }}>
-        <code>{`{
+                                   <code>{`{
   "mcpServers": {
     "workshops-de": {
       "url": "https://workshops-de-mcp.vercel.app/api/mcp"
@@ -87,7 +87,7 @@ export default function Home() {
         overflow: 'auto',
         fontFamily: 'Courier New, monospace'
       }}>
-        <code>{`{
+                                   <code>{`{
   "mcpServers": {
     "workshops-de": {
       "url": "https://workshops-de-mcp.vercel.app/api/mcp",

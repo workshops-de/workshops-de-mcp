@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { createMcpHandler } from 'mcp-handler';
 import axios from 'axios';
 
+export const runtime = 'nodejs'; // Use Node.js runtime for axios support
+export const dynamic = 'force-dynamic'; // Force dynamic rendering
 export const maxDuration = 60; // Maximum allowed duration for Vercel Hobby: 60 seconds
 
 const BASE_URL = 'https://workshops.de/api';
@@ -114,8 +116,9 @@ const handler = createMcpHandler(
     name: '@workshops.de/mcp',
     version: '1.1.0',
     description: 'MCP Server für Workshops.DE API - Zugriff auf Kurse, Trainer und Events'
-  },
-  { basePath: '/api' },
+  }
 );
 
-export { handler as GET, handler as POST }; 
+export const GET = handler;
+export const POST = handler;
+export const OPTIONS = handler; 
