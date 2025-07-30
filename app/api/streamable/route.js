@@ -4,8 +4,15 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-// Create server instance
-const server = createMCPServer();
+// Lazy server initialization
+let server = null;
+
+function getServer() {
+  if (!server) {
+    server = createMCPServer();
+  }
+  return server;
+}
 
 // Streamable HTTP endpoint handler
 export async function handler(request) {
@@ -64,7 +71,7 @@ export async function handler(request) {
       }
 
       // Handle the request using the MCP server
-      const result = await handleJsonRpcRequest(server, body);
+      const result = await handleJsonRpcRequest(getServer(), body);
       
       // Return successful response
       return new Response(
