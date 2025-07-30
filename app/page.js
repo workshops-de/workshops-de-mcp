@@ -61,7 +61,7 @@ export default function Home() {
         overflow: 'auto',
         fontFamily: 'Courier New, monospace'
       }}>
-        <code>npx @modelcontextprotocol/inspector@latest https://workshops-de-mcp.vercel.app/api/mcp</code>
+        <code>npx @modelcontextprotocol/inspector@latest https://workshops-de-mcp.vercel.app/api/sse</code>
       </pre>
       
       <h2 style={{ color: '#333' }}>⚙️ Verwendung in Cursor</h2>
@@ -76,7 +76,7 @@ export default function Home() {
                                    <code>{`{
   "mcpServers": {
     "workshops-de": {
-      "url": "https://workshops-de-mcp.vercel.app/api/mcp"
+      "url": "https://workshops-de-mcp.vercel.app/api/sse"
     }
   }
 }`}</code>
@@ -93,8 +93,7 @@ export default function Home() {
                                    <code>{`{
   "mcpServers": {
     "workshops-de": {
-      "url": "https://workshops-de-mcp.vercel.app/api/mcp",
-      "transport": "http"
+      "url": "https://workshops-de-mcp.vercel.app/api/sse"
     }
   }
 }`}</code>

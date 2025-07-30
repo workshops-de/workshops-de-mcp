@@ -144,9 +144,6 @@ const handler = createMcpHandler(
     name: '@workshops.de/mcp',
     version: '1.1.0',
     description: 'MCP Server für Workshops.DE API - Zugriff auf Kurse, Trainer und Events'
-  },
-  {
-    basePath: '/api'
   }
 );
 
