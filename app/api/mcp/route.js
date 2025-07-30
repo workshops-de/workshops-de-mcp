@@ -179,6 +179,13 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+
   try {
     const body = await request.json();
     
@@ -191,7 +198,7 @@ export async function POST(request) {
           code: -32600,
           message: 'Invalid Request'
         }
-      });
+      }, { headers });
     }
 
     switch (body.method) {
@@ -202,11 +209,17 @@ export async function POST(request) {
           result: {
             protocolVersion: '2024-11-05',
             capabilities: {
-              tools: {}
+              tools: {
+                available: true,
+                definitions: TOOLS
+              },
+              resources: {}
             },
-            serverInfo: SERVER_INFO
+            serverInfo: SERVER_INFO,
+            instructions: "Ich bin der MCP Server für Workshops.DE und kann dir Informationen über Kurse, Trainer und Events liefern.",
+            tools: TOOLS
           }
-        });
+        }, { headers });
 
       case 'tools/list':
         return Response.json({
@@ -215,7 +228,7 @@ export async function POST(request) {
           result: {
             tools: TOOLS
           }
-        });
+        }, { headers });
 
       case 'tools/call':
         const toolName = body.params?.name;
@@ -229,7 +242,7 @@ export async function POST(request) {
               code: -32602,
               message: 'Invalid params: missing tool name'
             }
-          });
+          }, { headers });
         }
 
         const result = await callTool(toolName, toolArgs);
@@ -237,7 +250,7 @@ export async function POST(request) {
           jsonrpc: '2.0',
           id: body.id,
           result
-        });
+        }, { headers });
 
       default:
         return Response.json({
@@ -247,7 +260,7 @@ export async function POST(request) {
             code: -32601,
             message: `Method not found: ${body.method}`
           }
-        });
+        }, { headers });
     }
     
   } catch (error) {
@@ -258,7 +271,7 @@ export async function POST(request) {
         code: -32603,
         message: `Internal error: ${error.message}`
       }
-    });
+    }, { headers });
   }
 }
 
