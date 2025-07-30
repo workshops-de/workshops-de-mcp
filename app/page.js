@@ -25,9 +25,9 @@ export default function Home() {
           padding: '0.5rem',
           borderRadius: '4px',
           fontFamily: 'Courier New, monospace'
-        }}>https://workshops-de-mcp.vercel.app/api/sse</code>
+        }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
         <p style={{ marginTop: '0.5rem', fontSize: '0.9em', color: '#666' }}>
-          Verwendet den offiziellen MCP-Handler von Vercel mit Streamable HTTP Transport
+          Verwendet den Standard JSON-RPC 2.0 Transport für MCP
         </p>
       </div>
       
@@ -61,7 +61,7 @@ export default function Home() {
         overflow: 'auto',
         fontFamily: 'Courier New, monospace'
       }}>
-        <code>npx @modelcontextprotocol/inspector@latest https://workshops-de-mcp.vercel.app/api/sse</code>
+        <code>npx @modelcontextprotocol/inspector@latest https://workshops-de-mcp.vercel.app/api/mcp</code>
       </pre>
       
       <h2 style={{ color: '#333' }}>⚙️ Verwendung in Cursor</h2>
@@ -76,7 +76,7 @@ export default function Home() {
                                    <code>{`{
   "mcpServers": {
     "workshops-de": {
-      "url": "https://workshops-de-mcp.vercel.app/api/sse"
+      "url": "https://workshops-de-mcp.vercel.app/api/mcp"
     }
   }
 }`}</code>
@@ -93,7 +93,7 @@ export default function Home() {
                                    <code>{`{
   "mcpServers": {
     "workshops-de": {
-      "url": "https://workshops-de-mcp.vercel.app/api/sse"
+      "url": "https://workshops-de-mcp.vercel.app/api/mcp"
     }
   }
 }`}</code>
