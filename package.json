@@ -31,12 +31,11 @@
   },
   "homepage": "https://workshops.de",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
     "axios": "^1.7.9",
-    "mcp-handler": "^1.0.1",
     "next": "^15.4.5",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

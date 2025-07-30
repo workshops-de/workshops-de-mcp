@@ -1,6 +1,6 @@
 # Workshops.DE MCP Server für Vercel
 
-Dieses Projekt nutzt Vercels native MCP-Unterstützung mit dem `mcp-handler` Package für optimale Performance und einfache Integration.
+Dieses Projekt nutzt das offizielle [@modelcontextprotocol/sdk](https://github.com/modelcontextprotocol/typescript-sdk) mit StreamableHTTP Transport für optimale Performance und einfache Integration.
 
 ## 🚀 Quick Deploy
 
@@ -11,8 +11,8 @@ Dieses Projekt nutzt Vercels native MCP-Unterstützung mit dem `mcp-handler` Pac
 ```
 ├── app/
 │   ├── api/
-│   │   └── [transport]/
-│   │       └── route.js   # MCP Server mit mcp-handler
+│   │   └── streamable/
+│   │       └── route.js   # MCP Server mit offiziellem SDK
 │   ├── layout.js          # Root Layout
 │   └── page.js            # Landing Page
 ├── package.json           # Dependencies
@@ -37,7 +37,7 @@ Die App läuft dann auf http://localhost:3000
 
 Der Server nutzt Vercels natives MCP Handler Format:
 
-**Endpoint:** `https://your-app.vercel.app/api/sse`
+**Endpoint:** `https://your-app.vercel.app/api/streamable`
 
 ### Testen mit MCP Inspector
 
@@ -48,7 +48,7 @@ npx @modelcontextprotocol/inspector@latest https://your-app.vercel.app
 Dann:
 1. Öffne http://127.0.0.1:6274
 2. Wähle "Streamable HTTP" als Transport
-3. Gib die URL ein: `https://your-app.vercel.app/api/sse`
+3. Gib die URL ein: `https://your-app.vercel.app/api/streamable`
 4. Klicke auf "Connect"
 
 ## 🔌 MCP Client Integration
@@ -60,7 +60,7 @@ Dann:
 {
   "mcpServers": {
     "workshops-de": {
-      "url": "https://your-app.vercel.app/api/sse"
+      "url": "https://your-app.vercel.app/api/streamable"
     }
   }
 }
@@ -72,7 +72,7 @@ Dann:
 {
   "mcpServers": {
     "workshops-de": {
-      "url": "https://your-app.vercel.app/api/sse"
+      "url": "https://your-app.vercel.app/api/streamable"
     }
   }
 }
@@ -148,7 +148,7 @@ Vercel bietet eingebautes Monitoring:
 - Alle API Calls sollten innerhalb dieser Zeit abgeschlossen sein
 
 **Verbindung schlägt fehl?**
-- Stelle sicher, dass die URL korrekt ist: `/api/sse`
+- Stelle sicher, dass die URL korrekt ist: `/api/streamable`
 - Nutze den MCP Inspector zum Testen
 - Prüfe die Vercel Function Logs im Dashboard
 

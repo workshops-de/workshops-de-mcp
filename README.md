@@ -142,9 +142,9 @@ Nach der Installation kannst du in Claude folgende Befehle verwenden:
 
 Der Server ist über folgenden Endpoint erreichbar:
 
-**Streamable HTTP (SSE)**: `https://workshops-de-mcp.vercel.app/api/sse`
+**StreamableHTTP**: `https://workshops-de-mcp.vercel.app/api/streamable`
 
-Der Server verwendet den offiziellen `mcp-handler` von Vercel für optimale Kompatibilität mit Claude und anderen MCP Clients.
+Der Server verwendet das offizielle [@modelcontextprotocol/sdk](https://github.com/modelcontextprotocol/typescript-sdk) mit StreamableHTTP Transport für optimale Kompatibilität mit Claude und anderen MCP Clients.
 
 ## API Endpunkte
 
