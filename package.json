@@ -8,10 +8,10 @@
     "workshops-de-mcp": "./index.js"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "next start",
     "dev": "next dev",
     "build": "next build",
-    "start:next": "next start",
+    "start:standalone": "node index.js",
     "deploy": "vercel"
   },
   "keywords": [
