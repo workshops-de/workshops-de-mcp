@@ -1,102 +1,148 @@
-import { z } from 'zod';
-import { createMcpHandler } from 'mcp-handler';
 import axios from 'axios';
 
-export const runtime = 'nodejs'; // Use Node.js runtime for axios support
-export const dynamic = 'force-dynamic'; // Force dynamic rendering
-export const maxDuration = 60; // Maximum allowed duration for Vercel Hobby: 60 seconds
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 const BASE_URL = 'https://workshops.de/api';
 
-const handler = createMcpHandler(
-  (server) => {
-    server.tool(
-      'list_courses',
-      'Zeigt alle verfügbaren Kurse von Workshops.DE an',
-      {},
-      async () => {
-        const response = await axios.get(`${BASE_URL}/course/`);
+// MCP Server Info
+const SERVER_INFO = {
+  name: '@workshops.de/mcp',
+  version: '1.1.0',
+  description: 'MCP Server für Workshops.DE API - Zugriff auf Kurse, Trainer und Events'
+};
+
+// Tool Definitions
+const TOOLS = [
+  {
+    name: 'list_courses',
+    description: 'Zeigt alle verfügbaren Kurse von Workshops.DE an',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    }
+  },
+  {
+    name: 'get_course_events',
+    description: 'Zeigt alle Events/Termine für einen bestimmten Kurs an',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        courseId: {
+          type: 'string',
+          description: 'Die ID des Kurses'
+        }
+      },
+      required: ['courseId']
+    }
+  },
+  {
+    name: 'list_trainers',
+    description: 'Zeigt alle Trainer von Workshops.DE an',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    }
+  },
+  {
+    name: 'get_course_trainers',
+    description: 'Zeigt alle Trainer für einen bestimmten Kurs an',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        courseId: {
+          type: 'string',
+          description: 'Die ID des Kurses'
+        }
+      },
+      required: ['courseId']
+    }
+  },
+  {
+    name: 'list_events',
+    description: 'Zeigt alle kommenden Schulungen und Events von Workshops.DE an',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: []
+    }
+  },
+  {
+    name: 'get_event',
+    description: 'Zeigt Details zu einem bestimmten Event anhand der Event-ID',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        eventId: {
+          type: 'string',
+          description: 'Die ID des Events'
+        }
+      },
+      required: ['eventId']
+    }
+  }
+];
+
+// Tool Handlers
+async function callTool(name, args) {
+  try {
+    switch (name) {
+      case 'list_courses':
+        const coursesResponse = await axios.get(`${BASE_URL}/course/`);
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify(response.data, null, 2)
-          }],
+            text: JSON.stringify(coursesResponse.data, null, 2)
+          }]
         };
-      },
-    );
-    
-    server.tool(
-      'get_course_events',
-      'Zeigt alle Events/Termine für einen bestimmten Kurs an',
-      { courseId: z.string().describe('Die ID des Kurses') },
-      async ({ courseId }) => {
-        const response = await axios.get(`${BASE_URL}/course/${courseId}/events`);
+
+      case 'get_course_events':
+        const eventsResponse = await axios.get(`${BASE_URL}/course/${args.courseId}/events`);
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify(response.data, null, 2)
-          }],
+            text: JSON.stringify(eventsResponse.data, null, 2)
+          }]
         };
-      },
-    );
-    
-    server.tool(
-      'list_trainers',
-      'Zeigt alle Trainer von Workshops.DE an',
-      {},
-      async () => {
-        const response = await axios.get(`${BASE_URL}/trainers/`);
+
+      case 'list_trainers':
+        const trainersResponse = await axios.get(`${BASE_URL}/trainers/`);
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify(response.data, null, 2)
-          }],
+            text: JSON.stringify(trainersResponse.data, null, 2)
+          }]
         };
-      },
-    );
-    
-    server.tool(
-      'get_course_trainers',
-      'Zeigt alle Trainer für einen bestimmten Kurs an',
-      { courseId: z.string().describe('Die ID des Kurses') },
-      async ({ courseId }) => {
-        const response = await axios.get(`${BASE_URL}/course/${courseId}/trainers`);
+
+      case 'get_course_trainers':
+        const courseTrainersResponse = await axios.get(`${BASE_URL}/course/${args.courseId}/trainers`);
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify(response.data, null, 2)
-          }],
+            text: JSON.stringify(courseTrainersResponse.data, null, 2)
+          }]
         };
-      },
-    );
-    
-    server.tool(
-      'list_events',
-      'Zeigt alle kommenden Events/Schulungen von Workshops.DE an',
-      {},
-      async () => {
-        const response = await axios.get(`${BASE_URL}/events`);
+
+      case 'list_events':
+        const allEventsResponse = await axios.get(`${BASE_URL}/events`);
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify(response.data, null, 2)
-          }],
+            text: JSON.stringify(allEventsResponse.data, null, 2)
+          }]
         };
-      },
-    );
-    
-    server.tool(
-      'get_event',
-      'Zeigt Details zu einem bestimmten Event anhand der Event-ID',
-      { eventId: z.string().describe('Die ID des Events') },
-      async ({ eventId }) => {
+
+      case 'get_event':
         try {
-          const response = await axios.get(`${BASE_URL}/events/${eventId}`);
+          const eventResponse = await axios.get(`${BASE_URL}/events/${args.eventId}`);
           return {
             content: [{
               type: 'text',
-              text: JSON.stringify(response.data, null, 2)
-            }],
+              text: JSON.stringify(eventResponse.data, null, 2)
+            }]
           };
         } catch (error) {
           if (error.response?.status === 404) {
@@ -104,21 +150,125 @@ const handler = createMcpHandler(
               content: [{
                 type: 'text',
                 text: 'Einzelne Events können möglicherweise nicht über die API abgerufen werden.'
-              }],
+              }]
             };
           }
           throw error;
         }
-      },
-    );
-  },
-  {
-    name: '@workshops.de/mcp',
-    version: '1.1.0',
-    description: 'MCP Server für Workshops.DE API - Zugriff auf Kurse, Trainer und Events'
-  }
-);
 
-export const GET = handler;
-export const POST = handler;
-export const OPTIONS = handler; 
+      default:
+        throw new Error(`Unknown tool: ${name}`);
+    }
+  } catch (error) {
+    return {
+      content: [{
+        type: 'text',
+        text: `Error: ${error.message}`
+      }],
+      isError: true
+    };
+  }
+}
+
+// Main handlers
+export async function GET(request) {
+  return new Response('MCP endpoint - use POST for JSON-RPC requests', {
+    status: 200,
+    headers: { 'Content-Type': 'text/plain' }
+  });
+}
+
+export async function POST(request) {
+  try {
+    const body = await request.json();
+    
+    // Handle JSON-RPC requests
+    if (body.jsonrpc !== '2.0') {
+      return Response.json({
+        jsonrpc: '2.0',
+        id: body.id || null,
+        error: {
+          code: -32600,
+          message: 'Invalid Request'
+        }
+      });
+    }
+
+    switch (body.method) {
+      case 'initialize':
+        return Response.json({
+          jsonrpc: '2.0',
+          id: body.id,
+          result: {
+            protocolVersion: '2024-11-05',
+            capabilities: {
+              tools: {}
+            },
+            serverInfo: SERVER_INFO
+          }
+        });
+
+      case 'tools/list':
+        return Response.json({
+          jsonrpc: '2.0',
+          id: body.id,
+          result: {
+            tools: TOOLS
+          }
+        });
+
+      case 'tools/call':
+        const toolName = body.params?.name;
+        const toolArgs = body.params?.arguments || {};
+        
+        if (!toolName) {
+          return Response.json({
+            jsonrpc: '2.0',
+            id: body.id,
+            error: {
+              code: -32602,
+              message: 'Invalid params: missing tool name'
+            }
+          });
+        }
+
+        const result = await callTool(toolName, toolArgs);
+        return Response.json({
+          jsonrpc: '2.0',
+          id: body.id,
+          result
+        });
+
+      default:
+        return Response.json({
+          jsonrpc: '2.0',
+          id: body.id,
+          error: {
+            code: -32601,
+            message: `Method not found: ${body.method}`
+          }
+        });
+    }
+    
+  } catch (error) {
+    return Response.json({
+      jsonrpc: '2.0',
+      id: null,
+      error: {
+        code: -32603,
+        message: `Internal error: ${error.message}`
+      }
+    });
+  }
+}
+
+export async function OPTIONS(request) {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    }
+  });
+}
