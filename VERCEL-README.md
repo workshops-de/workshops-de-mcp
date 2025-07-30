@@ -11,7 +11,7 @@ Dieses Projekt nutzt Vercels native MCP-Unterstützung mit dem `mcp-handler` Pac
 ```
 ├── app/
 │   ├── api/
-│   │   └── mcp/
+│   │   └── [transport]/
 │   │       └── route.js   # MCP Server mit mcp-handler
 │   ├── layout.js          # Root Layout
 │   └── page.js            # Landing Page
@@ -37,7 +37,7 @@ Die App läuft dann auf http://localhost:3000
 
 Der Server nutzt Vercels natives MCP Handler Format:
 
-**Endpoint:** `https://your-app.vercel.app/api/mcp`
+**Endpoint:** `https://your-app.vercel.app/api/sse`
 
 ### Testen mit MCP Inspector
 
@@ -48,7 +48,7 @@ npx @modelcontextprotocol/inspector@latest https://your-app.vercel.app
 Dann:
 1. Öffne http://127.0.0.1:6274
 2. Wähle "Streamable HTTP" als Transport
-3. Gib die URL ein: `https://your-app.vercel.app/api/mcp`
+3. Gib die URL ein: `https://your-app.vercel.app/api/sse`
 4. Klicke auf "Connect"
 
 ## 🔌 MCP Client Integration
@@ -60,7 +60,7 @@ Dann:
 {
   "mcpServers": {
     "workshops-de": {
-      "url": "https://your-app.vercel.app/api/mcp"
+      "url": "https://your-app.vercel.app/api/sse"
     }
   }
 }
@@ -72,8 +72,7 @@ Dann:
 {
   "mcpServers": {
     "workshops-de": {
-      "url": "https://your-app.vercel.app/api/mcp",
-      "transport": "http"
+      "url": "https://your-app.vercel.app/api/sse"
     }
   }
 }
@@ -149,7 +148,7 @@ Vercel bietet eingebautes Monitoring:
 - Alle API Calls sollten innerhalb dieser Zeit abgeschlossen sein
 
 **Verbindung schlägt fehl?**
-- Stelle sicher, dass die URL korrekt ist: `/api/mcp`
+- Stelle sicher, dass die URL korrekt ist: `/api/sse`
 - Nutze den MCP Inspector zum Testen
 - Prüfe die Vercel Function Logs im Dashboard
 

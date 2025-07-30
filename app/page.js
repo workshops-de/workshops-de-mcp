@@ -18,27 +18,17 @@ export default function Home() {
         margin: '1rem 0',
         border: '1px solid #4caf50'
       }}>
-        <h2 style={{ color: '#333' }}>🔌 MCP Endpoints</h2>
-        <div style={{ marginBottom: '1rem' }}>
-          <strong>Streamable HTTP (empfohlen):</strong><br/>
-          <code style={{
-            fontSize: '1.1em',
-            background: '#f4f4f4',
-            padding: '0.5rem',
-            borderRadius: '4px',
-            fontFamily: 'Courier New, monospace'
-          }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
-        </div>
-        <div>
-          <strong>Server-Sent Events (SSE):</strong><br/>
-          <code style={{
-            fontSize: '1.1em',
-            background: '#f4f4f4',
-            padding: '0.5rem',
-            borderRadius: '4px',
-            fontFamily: 'Courier New, monospace'
-          }}>https://workshops-de-mcp.vercel.app/api/mcp-sse</code>
-        </div>
+        <h2 style={{ color: '#333' }}>🔌 MCP Endpoint</h2>
+        <code style={{
+          fontSize: '1.1em',
+          background: '#f4f4f4',
+          padding: '0.5rem',
+          borderRadius: '4px',
+          fontFamily: 'Courier New, monospace'
+        }}>https://workshops-de-mcp.vercel.app/api/sse</code>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.9em', color: '#666' }}>
+          Verwendet den offiziellen MCP-Handler von Vercel mit Streamable HTTP Transport
+        </p>
       </div>
       
       <h2 style={{ color: '#333' }}>📋 Verfügbare Tools</h2>

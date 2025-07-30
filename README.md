@@ -138,14 +138,13 @@ Nach der Installation kannst du in Claude folgende Befehle verwenden:
 - "Zeige mir alle kommenden Schulungen/Events"
 - "Zeige mir Details zum Event [EVENT-ID]"
 
-## Transport-Mechanismen
+## MCP Endpoint
 
-Der Server unterstützt zwei Transport-Protokolle:
+Der Server ist über folgenden Endpoint erreichbar:
 
-1. **Streamable HTTP** (empfohlen): `https://workshops-de-mcp.vercel.app/api/mcp`
-2. **Server-Sent Events (SSE)**: `https://workshops-de-mcp.vercel.app/api/mcp-sse`
+**Streamable HTTP (SSE)**: `https://workshops-de-mcp.vercel.app/api/sse`
 
-Siehe [MCP-TRANSPORTS.md](./MCP-TRANSPORTS.md) für Details.
+Der Server verwendet den offiziellen `mcp-handler` von Vercel für optimale Kompatibilität mit Claude und anderen MCP Clients.
 
 ## API Endpunkte
 
