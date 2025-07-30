@@ -18,17 +18,37 @@ export default function Home() {
         margin: '1rem 0',
         border: '1px solid #4caf50'
       }}>
-        <h2 style={{ color: '#333' }}>🔌 MCP Endpoint</h2>
-        <code style={{
-          fontSize: '1.1em',
-          background: '#f4f4f4',
-          padding: '0.5rem',
-          borderRadius: '4px',
-          fontFamily: 'Courier New, monospace'
-        }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.9em', color: '#666' }}>
-          Verwendet das offizielle MCP TypeScript SDK mit StreamableHTTP Transport
-        </p>
+        <h2 style={{ color: '#333' }}>🔌 MCP Endpoints</h2>
+        
+        <div style={{ marginBottom: '1rem' }}>
+          <h3 style={{ fontSize: '1.1em', marginBottom: '0.5rem' }}>Standard JSON-RPC Endpoint:</h3>
+          <code style={{
+            fontSize: '1.1em',
+            background: '#f4f4f4',
+            padding: '0.5rem',
+            borderRadius: '4px',
+            fontFamily: 'Courier New, monospace',
+            display: 'block'
+          }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
+          <p style={{ marginTop: '0.5rem', fontSize: '0.9em', color: '#666' }}>
+            Standard JSON-RPC 2.0 Endpoint für MCP Requests
+          </p>
+        </div>
+
+        <div>
+          <h3 style={{ fontSize: '1.1em', marginBottom: '0.5rem' }}>Streamable HTTP Endpoint (Neu!):</h3>
+          <code style={{
+            fontSize: '1.1em',
+            background: '#f4f4f4',
+            padding: '0.5rem',
+            borderRadius: '4px',
+            fontFamily: 'Courier New, monospace',
+            display: 'block'
+          }}>https://workshops-de-mcp.vercel.app/api/streamable</code>
+          <p style={{ marginTop: '0.5rem', fontSize: '0.9em', color: '#666' }}>
+            Verwendet das offizielle MCP TypeScript SDK mit StreamableHTTPServerTransport (ohne Session-Management)
+          </p>
+        </div>
       </div>
       
       <h2 style={{ color: '#333' }}>📋 Verfügbare Tools</h2>
