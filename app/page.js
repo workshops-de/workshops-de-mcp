@@ -11,21 +11,34 @@ export default function Home() {
       <h1 style={{ color: '#333' }}>🚀 Workshops.DE MCP Server</h1>
       <p>Dies ist ein Model Context Protocol (MCP) Server für die Workshops.DE API.</p>
       
-      <div style={{
+            <div style={{
         background: '#e8f5e9',
         padding: '1rem',
         borderRadius: '8px',
         margin: '1rem 0',
         border: '1px solid #4caf50'
       }}>
-        <h2 style={{ color: '#333' }}>🔌 MCP Endpoint</h2>
-        <code style={{
-          fontSize: '1.1em',
-          background: '#f4f4f4',
-          padding: '0.5rem',
-          borderRadius: '4px',
-          fontFamily: 'Courier New, monospace'
-                 }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
+        <h2 style={{ color: '#333' }}>🔌 MCP Endpoints</h2>
+        <div style={{ marginBottom: '1rem' }}>
+          <strong>Streamable HTTP (empfohlen):</strong><br/>
+          <code style={{
+            fontSize: '1.1em',
+            background: '#f4f4f4',
+            padding: '0.5rem',
+            borderRadius: '4px',
+            fontFamily: 'Courier New, monospace'
+          }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
+        </div>
+        <div>
+          <strong>Server-Sent Events (SSE):</strong><br/>
+          <code style={{
+            fontSize: '1.1em',
+            background: '#f4f4f4',
+            padding: '0.5rem',
+            borderRadius: '4px',
+            fontFamily: 'Courier New, monospace'
+          }}>https://workshops-de-mcp.vercel.app/api/mcp-sse</code>
+        </div>
       </div>
       
       <h2 style={{ color: '#333' }}>📋 Verfügbare Tools</h2>
