@@ -40,7 +40,9 @@ export async function handler(request) {
         description: 'MCP Server for Workshops.DE API (Streamable HTTP)',
         protocolVersion: '2024-11-05',
         capabilities: {
-          tools: {}
+          tools: {
+            listChanged: true
+          }
         }
       }),
       { 
