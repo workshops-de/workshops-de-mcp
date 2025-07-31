@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Endpoints Test - Workshops.DE</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fafafa;
+        }
+        .endpoint-section {
+            background: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            font-weight: bold;
+        }
+        .status.connected { background: #e8f5e9; color: #2e7d32; }
+        .status.disconnected { background: #ffebee; color: #c62828; }
+        .status.working { background: #fff3e0; color: #ef6c00; }
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0.25rem;
+        }
+        button:hover { background: #1565c0; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .messages {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        .message {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85em;
+            white-space: pre-wrap;
+        }
+        .message.sent { background: #e3f2fd; }
+        .message.received { background: #f3e5f5; }
+        .message.error { background: #ffebee; }
+        code {
+            background: #f4f4f4;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 MCP Endpoints Test</h1>
+    <p>Test page for both MCP transport implementations</p>
+
+    <!-- SSE Endpoint -->
+    <div class="endpoint-section">
+        <h2>Server-Sent Events (SSE) - /api/mcp</h2>
+        <div id="sse-status" class="status disconnected">Disconnected</div>
+        <div>
+            <button onclick="connectSSE()">Connect SSE</button>
+            <button onclick="disconnectSSE()">Disconnect</button>
+            <button onclick="testSSE()" id="sse-test-btn" disabled>Test MCP Flow</button>
+        </div>
+        <div id="sse-messages" class="messages"></div>
+    </div>
+
+    <!-- Streamable HTTP Endpoint -->
+    <div class="endpoint-section">
+        <h2>Streamable HTTP - /api/streamable</h2>
+        <div id="http-status" class="status disconnected">Ready</div>
+        <div>
+            <button onclick="testStreamableHTTP()" id="http-test-btn">Test MCP Flow</button>
+        </div>
+        <div id="http-messages" class="messages"></div>
+    </div>
+
+    <!-- Tool Results -->
+    <div class="endpoint-section">
+        <h2>Available Tools</h2>
+        <div id="tools-list">Click test buttons above to see available tools...</div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        let sessionId = null;
+        let messageId = 1;
+
+        // SSE Functions
+        function connectSSE() {
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            addSSEMessage('Connecting to SSE endpoint...', 'sent');
+            document.getElementById('sse-status').textContent = 'Connecting...';
+            document.getElementById('sse-status').className = 'status working';
+
+            eventSource = new EventSource('/api/mcp');
+            
+            eventSource.addEventListener('connection', (event) => {
+                const data = JSON.parse(event.data);
+                sessionId = data.sessionId;
+                document.getElementById('sse-status').textContent = `Connected (Session: ${sessionId})`;
+                document.getElementById('sse-status').className = 'status connected';
+                document.getElementById('sse-test-btn').disabled = false;
+                addSSEMessage(`Connected: ${JSON.stringify(data, null, 2)}`, 'received');
+            });
+
+            eventSource.addEventListener('response', (event) => {
+                const response = JSON.parse(event.data);
+                addSSEMessage(`Response: ${JSON.stringify(response, null, 2)}`, 'received');
+                
+                // Show tools if available
+                if (response.result && response.result.tools) {
+                    displayTools(response.result.tools);
+                }
+            });
+
+            eventSource.addEventListener('error', (event) => {
+                const error = JSON.parse(event.data);
+                addSSEMessage(`Error: ${JSON.stringify(error, null, 2)}`, 'error');
+            });
+
+            eventSource.addEventListener('ping', (event) => {
+                const data = JSON.parse(event.data);
+                console.log('Ping received:', data.timestamp);
+            });
+
+            eventSource.onerror = (error) => {
+                console.error('SSE connection error:', error);
+                document.getElementById('sse-status').textContent = 'Connection Error';
+                document.getElementById('sse-status').className = 'status disconnected';
+                document.getElementById('sse-test-btn').disabled = true;
+            };
+        }
+
+        function disconnectSSE() {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+            sessionId = null;
+            document.getElementById('sse-status').textContent = 'Disconnected';
+            document.getElementById('sse-status').className = 'status disconnected';
+            document.getElementById('sse-test-btn').disabled = true;
+            addSSEMessage('Disconnected', 'sent');
+        }
+
+        async function sendSSEMessage(message) {
+            if (!sessionId) {
+                alert('Not connected. Please connect first.');
+                return;
+            }
+
+            try {
+                addSSEMessage(`Sent: ${JSON.stringify(message, null, 2)}`, 'sent');
+                const response = await fetch(`/api/mcp?sessionId=${sessionId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(message)
+                });
+                
+                const result = await response.json();
+                console.log('Message sent:', result);
+            } catch (error) {
+                console.error('Failed to send message:', error);
+                addSSEMessage(`Send error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSSE() {
+            // Initialize
+            await sendSSEMessage({
+                jsonrpc: '2.0',
+                method: 'initialize',
+                params: {
+                    protocolVersion: '2024-11-05',
+                    capabilities: { tools: { listChanged: true } },
+                    clientInfo: { name: 'sse-test-client', version: '1.0.0' }
+                },
+                id: messageId++
+            });
+
+            // List tools
+            setTimeout(async () => {
+                await sendSSEMessage({
+                    jsonrpc: '2.0',
+                    method: 'tools/list',
+                    params: {},
+                    id: messageId++
+                });
+            }, 1000);
+
+            // Call a tool
+            setTimeout(async () => {
+                await sendSSEMessage({
+                    jsonrpc: '2.0',
+                    method: 'tools/call',
+                    params: {
+                        name: 'list_courses',
+                        arguments: {}
+                    },
+                    id: messageId++
+                });
+            }, 2000);
+        }
+
+        // Streamable HTTP Functions
+        async function testStreamableHTTP() {
+            document.getElementById('http-status').textContent = 'Testing...';
+            document.getElementById('http-status').className = 'status working';
+            document.getElementById('http-test-btn').disabled = true;
+
+            try {
+                // Initialize
+                addHTTPMessage('Initializing MCP connection...', 'sent');
+                let response = await fetch('/api/streamable', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'initialize',
+                        params: {
+                            protocolVersion: '2024-11-05',
+                            capabilities: { tools: { listChanged: true } },
+                            clientInfo: { name: 'http-test-client', version: '1.0.0' }
+                        },
+                        id: 1
+                    })
+                });
+                let result = await response.json();
+                addHTTPMessage(`Initialize: ${JSON.stringify(result, null, 2)}`, 'received');
+
+                // List tools
+                addHTTPMessage('Listing tools...', 'sent');
+                response = await fetch('/api/streamable', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'tools/list',
+                        params: {},
+                        id: 2
+                    })
+                });
+                result = await response.json();
+                addHTTPMessage(`Tools: ${JSON.stringify(result, null, 2)}`, 'received');
+                
+                // Show tools if available
+                if (result.result && result.result.tools) {
+                    displayTools(result.result.tools);
+                }
+
+                // Call a tool
+                addHTTPMessage('Calling list_trainers tool...', 'sent');
+                response = await fetch('/api/streamable', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        method: 'tools/call',
+                        params: {
+                            name: 'list_trainers',
+                            arguments: {}
+                        },
+                        id: 3
+                    })
+                });
+                result = await response.json();
+                addHTTPMessage(`Result: First 200 chars... ${JSON.stringify(result, null, 2).substring(0, 200)}...`, 'received');
+
+                document.getElementById('http-status').textContent = 'Test completed';
+                document.getElementById('http-status').className = 'status connected';
+
+            } catch (error) {
+                addHTTPMessage(`Error: ${error.message}`, 'error');
+                document.getElementById('http-status').textContent = 'Error';
+                document.getElementById('http-status').className = 'status disconnected';
+            } finally {
+                document.getElementById('http-test-btn').disabled = false;
+            }
+        }
+
+        // Helper functions
+        function addSSEMessage(text, type) {
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.textContent = text;
+            document.getElementById('sse-messages').appendChild(div);
+            document.getElementById('sse-messages').scrollTop = document.getElementById('sse-messages').scrollHeight;
+        }
+
+        function addHTTPMessage(text, type) {
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.textContent = text;
+            document.getElementById('http-messages').appendChild(div);
+            document.getElementById('http-messages').scrollTop = document.getElementById('http-messages').scrollHeight;
+        }
+
+        function displayTools(tools) {
+            const toolsList = document.getElementById('tools-list');
+            toolsList.innerHTML = '<h3>Available MCP Tools:</h3>';
+            tools.forEach(tool => {
+                const toolDiv = document.createElement('div');
+                toolDiv.style.margin = '0.5rem 0';
+                toolDiv.style.padding = '0.5rem';
+                toolDiv.style.background = '#f0f8ff';
+                toolDiv.style.borderRadius = '4px';
+                toolDiv.innerHTML = `
+                    <strong>${tool.name}</strong><br>
+                    <small>${tool.description}</small>
+                `;
+                toolsList.appendChild(toolDiv);
+            });
+        }
+
+        // Auto-connect SSE on page load
+        // connectSSE();
+    </script>
+</body>
+</html>

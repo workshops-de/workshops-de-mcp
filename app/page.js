@@ -35,8 +35,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div>
-          <h3 style={{ fontSize: '1.1em', marginBottom: '0.5rem' }}>Streamable HTTP Endpoint (Neu!):</h3>
+        <div style={{ marginBottom: '1rem' }}>
+          <h3 style={{ fontSize: '1.1em', marginBottom: '0.5rem' }}>Streamable HTTP Endpoint:</h3>
           <code style={{
             fontSize: '1.1em',
             background: '#f4f4f4',
@@ -46,7 +46,22 @@ export default function Home() {
             display: 'block'
           }}>https://workshops-de-mcp.vercel.app/api/streamable</code>
           <p style={{ marginTop: '0.5rem', fontSize: '0.9em', color: '#666' }}>
-            Verwendet das offizielle MCP TypeScript SDK mit StreamableHTTPServerTransport (ohne Session-Management)
+            Moderne HTTP-basierte MCP Implementierung mit bidirektionalem Streaming
+          </p>
+        </div>
+
+        <div>
+          <h3 style={{ fontSize: '1.1em', marginBottom: '0.5rem' }}>Server-Sent Events (SSE) Endpoint (Neu!):</h3>
+          <code style={{
+            fontSize: '1.1em',
+            background: '#f4f4f4',
+            padding: '0.5rem',
+            borderRadius: '4px',
+            fontFamily: 'Courier New, monospace',
+            display: 'block'
+          }}>https://workshops-de-mcp.vercel.app/api/mcp</code>
+          <p style={{ marginTop: '0.5rem', fontSize: '0.9em', color: '#666' }}>
+            Server-Sent Events für Real-time Kommunikation mit Session-Management
           </p>
         </div>
       </div>
